@@ -20,11 +20,10 @@ An AI-powered resume screening tool that analyzes resumes against job descriptio
 - PDFPlumber - PDF text extraction
 - ChromaDB - Vector database for embeddings
 - Sentence-Transformers - Text embeddings
-- OpenRouter API - GPT-4 Turbo model integration
+- Groq API - Fast LLM model integration
 
 **Frontend:**
 - React - JavaScript UI library
-- Axios - HTTP client
 - Modern CSS
 
 **Database:**
@@ -33,9 +32,9 @@ An AI-powered resume screening tool that analyzes resumes against job descriptio
 ## Installation
 
 ### Prerequisites
-- Python 3.8+
+- Python 3.10+
 - Node.js 14+
-- OpenRouter API key (get from [openrouter.ai](https://openrouter.ai))
+- Groq API key (get from [console.groq.com](https://console.groq.com))
 
 ### Backend Setup
 
@@ -57,12 +56,12 @@ pip install -r requirements.txt
 
 4. Create a `.env` file in the backend directory:
 ```
-OPENROUTER_API_KEY=sk-or-v1-your-api-key-here
+GROQ_API_KEY=your-groq-api-key-here
 ```
 
 5. Start the backend server:
 ```bash
-python -m uvicorn main:app --host 127.0.0.1 --port 8000
+python main.py
 ```
 
 ### Frontend Setup
@@ -74,7 +73,7 @@ cd frontend
 
 2. Install dependencies:
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
 
 3. Start the development server:
@@ -174,14 +173,14 @@ assessment-1/
 Create a `.env` file in the `backend` directory:
 
 ```
-OPENROUTER_API_KEY=your-api-key-here
+GROQ_API_KEY=your-groq-api-key-here
 ```
 
 ### API Configuration
 
 The application uses:
-- **Model**: `openai/gpt-4-turbo` via OpenRouter
-- **Base URL**: `https://openrouter.ai/api/v1`
+- **Model**: Groq LLM API
+- **Base URL**: `https://api.groq.com/openai/v1/chat/completions`
 - **Backend URL**: `http://127.0.0.1:8000`
 - **Frontend URL**: `http://localhost:3000`
 
@@ -199,9 +198,9 @@ The application uses:
 - Verify port 8000 is not in use
 
 ### API Key Error
-- Verify `OPENROUTER_API_KEY` is set in `.env`
-- Check API key format: `sk-or-v1-...`
-- Ensure you have sufficient credits on OpenRouter
+- Verify `GROQ_API_KEY` is set in `.env`
+- Check API key is valid from console.groq.com
+- Ensure you have sufficient API quota on Groq
 
 ### CORS Issues
 - Make sure frontend is running on `http://localhost:3000`
@@ -215,15 +214,21 @@ The application uses:
 
 ### Running in Development Mode
 
-**Backend with auto-reload:**
+**Backend with Uvicorn:**
 ```bash
-python -m uvicorn main:app --reload
+cd backend
+python main.py
 ```
 
 **Frontend with hot-reload:**
 ```bash
+cd frontend
 npm start
 ```
+
+Both servers will be available:
+- Backend: `http://127.0.0.1:8000`
+- Frontend: `http://localhost:3000`
 
 ## Performance Notes
 
