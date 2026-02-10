@@ -10,8 +10,8 @@ from rag import store_resume, retrieve_context
 from match import calculate_analysis  # ✅ FIXED
 
 load_dotenv()
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 app = FastAPI()
 
@@ -96,24 +96,24 @@ Question:
 Answer:"""
 
         headers = {
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+            "Authorization": f"Bearer {GROQ_API_KEY}",
             "Content-Type": "application/json",
         }
 
         payload_data = {
-            "model": "openai/gpt-4-turbo",
+            "model": "llama-3.3-70b-versatile",
             "messages": [
                 {"role": "user", "content": prompt_text}
             ],
             "max_tokens": 1000,
         }
 
-        response = requests.post(OPENROUTER_API_URL, headers=headers, json=payload_data)
+        response = requests.post(GROQ_API_URL, headers=headers, json=payload_data)
         
         # Check for API errors
         if response.status_code != 200:
             error_msg = response.json().get("error", {}).get("message", "Unknown error")
-            print(f"OpenRouter API Error: {response.status_code} - {error_msg}")
+            print(f"Groq API Error: {response.status_code} - {error_msg}")
             return {"answer": f"API Error: {error_msg}", "error": True}
         
         response_data = response.json()

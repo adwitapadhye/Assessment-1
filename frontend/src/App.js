@@ -1,5 +1,4 @@
 import React, { useMemo, useRef, useState } from "react";
-import axios from "axios";
 
 const API = "http://127.0.0.1:8000";
 
@@ -77,11 +76,13 @@ export default function App() {
       formData.append("resume", resume);
       formData.append("jd", jd);
 
-      const res = await axios.post(`${API}/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const res = await fetch(`${API}/upload`, {
+        method: "POST",
+        body: formData,
       });
 
-      setAnalysis(res.data);
+      const data = await res.json();
+      setAnalysis(data);
       setMessages((prev) => [
         ...prev,
         { role: "ai", text: "Analysis ready ✅ Ask anything about this candidate!" },
@@ -110,8 +111,13 @@ export default function App() {
     scrollChat();
 
     try {
-      const res = await axios.post(`${API}/chat`, { question: q });
-      setMessages((prev) => [...prev, { role: "ai", text: res.data.answer || "No answer returned." }]);
+      const res = await fetch(`${API}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q }),
+      });
+      const data = await res.json();
+      setMessages((prev) => [...prev, { role: "ai", text: data.answer || "No answer returned." }]);
       scrollChat();
     } catch (err) {
       console.error(err);
