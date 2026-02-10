@@ -19,7 +19,7 @@ def _extract_skills(text: str) -> Set[str]:
     """Extract technical skills (frameworks, languages, tools)"""
     text = _clean(text)
     
-    # Common tech stack keywords
+    
     tech_keywords = [
         "python", "javascript", "java", "c++", "c#", "typescript", "ruby", "go", "rust", "php",
         "react", "angular", "vue", "next", "svelte", "node", "django", "flask", "fastapi", "spring",
@@ -33,7 +33,7 @@ def _extract_skills(text: str) -> Set[str]:
         if skill in text:
             found.add(skill)
     
-    # Extract multi-word tech phrases
+    
     phrases = re.findall(r"(?:rest api|graphql|websocket|microservice|machine learning|deep learning|data science|full.?stack|backend|frontend|devops)", text)
     found.update(phrases)
     
@@ -59,24 +59,24 @@ def calculate_analysis(resume_text: str, jd_text: str) -> Dict:
     resume_skills = _extract_skills(resume_text)
     jd_skills = _extract_skills(jd_text)
 
-    # Match score combines keyword overlap and skill overlap
+    
     if not jd_keys:
         match_score = 0
         keyword_overlap = set()
     else:
         keyword_overlap = resume_keys.intersection(jd_keys)
-        skill_weight = len(resume_skills.intersection(jd_skills)) * 3  # Skills worth more
+        skill_weight = len(resume_skills.intersection(jd_skills)) * 3  
         keyword_weight = len(keyword_overlap)
         total_weight = skill_weight + keyword_weight
         max_weight = len(jd_skills) * 3 + len(jd_keys)
         match_score = int(round((total_weight / max(max_weight, 1)) * 100))
 
-    # Strengths: Extract actual skills found + relevant keywords
+    
     strengths = sorted(list(resume_skills.intersection(jd_skills)))
     strengths.extend([k for k in sorted(list(keyword_overlap))[:5] if k not in strengths])
     strengths = strengths[:10]
 
-    # Gaps: JD requirements not in resume
+    
     gaps = sorted(list(jd_skills.difference(resume_skills)))
     gaps.extend([k for k in sorted(list(jd_keys.difference(resume_keys)))[:5] if k not in gaps])
     gaps = gaps[:10]

@@ -7,7 +7,7 @@ import os
 
 from parser import extract_text
 from rag import store_resume, retrieve_context
-from match import calculate_analysis  # ✅ FIXED
+from match import calculate_analysis  
 
 load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -15,7 +15,7 @@ GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 app = FastAPI()
 
-# CORS for React frontend
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -110,7 +110,7 @@ Answer:"""
 
         response = requests.post(GROQ_API_URL, headers=headers, json=payload_data)
         
-        # Check for API errors
+        # API errors
         if response.status_code != 200:
             error_msg = response.json().get("error", {}).get("message", "Unknown error")
             print(f"Groq API Error: {response.status_code} - {error_msg}")
